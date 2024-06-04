@@ -1,0 +1,35 @@
+name: "Ansible"
+
+defaults:
+  run:
+    working-directory: ansible
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ansible/**
+      - .github/workflows/ansible.yml
+
+jobs:
+  ansible:
+    name: "Ansible"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: main.yml
+          directory: ansible
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [all]
+            64.176.70.143
+          options: |
+            --user root

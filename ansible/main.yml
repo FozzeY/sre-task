@@ -1,0 +1,25 @@
+---
+- name: Install docker
+  hosts: all
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+
+    - name: install ca-certificates curl
+      apt:
+        pkg:
+        - ca-certificates
+        - curl
+
+    - name: create keyring dir
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: download key
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: a+r
