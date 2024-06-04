@@ -1,5 +1,5 @@
 variable "hostname" {
-  type = "string"
+  type = string
 }
 
 terraform {
@@ -14,9 +14,9 @@ terraform {
       source = "vultr/vultr"
     }
   }
-    namecheap = {
-      source = "namecheap/namecheap"
-    }
+  namecheap = {
+    source = "namecheap/namecheap"
+  }
 }
 
 resource "vultr_ssh_key" "ansible" {
