@@ -23,7 +23,7 @@ resource "vultr_ssh_key" "ansible" {
 
 resource "vultr_ssh_key" "personal" {
   name    = "Personal"
-  ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJP1YicVpdk9zzalUa+3MbQWAhFRAMLTEHAgbBiN8/Xu admin${var.hostname}"
+  ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJP1YicVpdk9zzalUa+3MbQWAhFRAMLTEHAgbBiN8/Xu admin@${var.hostname}"
 }
 
 data "vultr_os" "ubuntu_2404" {
