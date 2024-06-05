@@ -79,6 +79,7 @@
         acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
         acme_version: 2
         account_key_src: /etc/pki/cert/private/account.key
+        account_key_passphrase: '{{ key_passphrase }}'
         account_email: igor.d.melnikov62@gmail.com
         csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /etc/ssl/${{ inventory_hostname }}.crt
