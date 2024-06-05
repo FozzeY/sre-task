@@ -127,6 +127,7 @@
         acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
         acme_version: 2
         account_key_src: /etc/pki/cert/private/account.key
+        account_key_passphrase: '{{ acme_key_passphrase }}'
         csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
         data: "{{ cert_challenge }}"
