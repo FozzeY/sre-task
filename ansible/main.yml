@@ -111,6 +111,11 @@
         mode: '0755'
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
 
+    - name: print challenge dirs
+      debug:
+        msg: /srv/linux_tweet_app/html/{{ item.key }}/{{ item.value['http-01']['resource'] | dirname }}
+      loop: '{{ cert_challenge.challenge_data | dict2items }}'
+
     - name: copy challenges
       copy:
         dest: /srv/linux_tweet_app/html/{{ item.key }}/{{ item.value['http-01']['resource'] }}
