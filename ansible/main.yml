@@ -34,3 +34,22 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
+
+    - name: checkout repo
+      git:
+        repo: https://github.com/dockersamples/linux_tweet_app
+        dest: /srv/linux_tweet_app
+
+    - name: build image
+      docker_image:
+        build:
+          path: /srv/linux_tweet_app
+          name: linux_tweet_app
+
+    - name: run linux_tweet_app
+      docker_cointainer:
+        pull: never
+        name: linux_tweet_app
+        image: linux_tweet_app
+        ports:
+        - '80:80'
