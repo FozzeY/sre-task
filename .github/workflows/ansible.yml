@@ -33,4 +33,4 @@ jobs:
             ${{ vars.HOSTNAME }}
           options: |
             --user root
-            --extra-vars key_passphrase='${{ secrets.ACME_KEY_PASSPHRASE }}'
+            --extra-vars key_passphrase=${{ secrets.ACME_KEY_PASSPHRASE }}
