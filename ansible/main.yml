@@ -98,11 +98,16 @@
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
+    - name: print challenge
+      debug:
+        var: cert_challenge
+
     - name: create challenge dir
       file:
         path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource'] | dirname }}
         state: directory
         mode: '0755'
+      when: cert_challenge is changed and inventory_hostname in cert_challenge['challenge_data']
 
     - name: copy challenge
       copy:
