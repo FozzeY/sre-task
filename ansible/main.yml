@@ -104,10 +104,10 @@
 
     - name: create challenge dir
       file:
-        path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource'] | dirname }}
+        path: {{ item }}
         state: directory
         mode: '0755'
-      when: cert_challenge is changed and inventory_hostname in cert_challenge['challenge_data']
+      loop: /srv/linux_tweet_app/html/{{ cert_challenge | json_query('challenge_data[*].http-01.resource') | dirname }}
 
     - name: copy challenge
       copy:
