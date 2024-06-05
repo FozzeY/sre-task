@@ -106,19 +106,14 @@
 
     - name: create challenge dirs
       file:
-        path: /srv/linux_tweet_app/html/{{ item.key }}/{{ item.value['http-01']['resource'] | dirname }}
+        path: /srv/linux_tweet_app/html/{{ item.value['http-01']['resource'] | dirname }}
         state: directory
         mode: '0755'
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
 
-    - name: print challenge dirs
-      debug:
-        msg: /srv/linux_tweet_app/html/{{ item.key }}/{{ item.value['http-01']['resource'] | dirname }}
-      loop: '{{ cert_challenge.challenge_data | dict2items }}'
-
     - name: copy challenges
       copy:
-        dest: /srv/linux_tweet_app/html/{{ item.key }}/{{ item.value['http-01']['resource'] }}
+        dest: /srv/linux_tweet_app/html/{{ item.value['http-01']['resource'] }}
         content: "{{ item.value['http-01']['resource_value'] }}"
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
       when: cert_challenge is changed
