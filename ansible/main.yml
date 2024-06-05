@@ -107,6 +107,7 @@
         state: directory
         mode: '0755'
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
+      when: cert_challenge is changed
 
     - name: copy challenges
       copy:
