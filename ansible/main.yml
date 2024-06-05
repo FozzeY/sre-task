@@ -79,6 +79,11 @@
         - '{{ inventory_hostname }}'
         - www.{{ inventory_hostname }}
 
+    - name: print alt names
+      debug:
+        var: "{{ item | map('regex_replace', '^', 'DNS:') | list }}"
+      with_list: '{{ hostname }}'
+
     - name: create csr
       openssl_csr:
         path: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
