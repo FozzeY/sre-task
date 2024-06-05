@@ -87,6 +87,10 @@
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
+    - name: print challenge
+      debug:
+        var: cert_challenge
+
     - name: create html dir
       file:
         path: /srv/linux_tweet_app/html/
@@ -95,8 +99,8 @@
 
     - name: copy challenge
       copy:
-        dest: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data']['{{ inventory_hostname }}']['http-01']['resource'] }}
-        content: "{{ cert_challenge['challenge_data']['{{ inventory_hostname }}']['http-01']['resource_value'] }}"
+        dest: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource'] }}
+        content: "{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource_value'] }}"
       when: cert_challenge is changed and inventory_hostname in cert_challenge['challenge_data']
 
     - name: run linux_tweet_app
