@@ -30,6 +30,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
             [all]
-            64.176.70.143
+            ${{ vars.HOSTNAME }}
           options: |
             --user root
