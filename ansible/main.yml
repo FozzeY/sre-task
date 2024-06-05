@@ -3,6 +3,10 @@
   hosts: all
   tasks:
 
+    - name: install jmespath
+      apt:
+        name: jmespath
+
     - name: get package facts
       package_facts:
 
@@ -16,7 +20,6 @@
         pkg:
         - ca-certificates
         - curl
-        - python3-jmespath
 
     - name: create keyring dir
       file:
