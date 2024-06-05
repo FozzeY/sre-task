@@ -47,11 +47,16 @@
           path: /srv/linux_tweet_app
         source: build
 
-    - name: create html dir
+    - name: create token dir
       file:
-        path: /srv/linux_tweet_app/html
+        path: /srv/linux_tweet_app/token
         state: directory
         mode: '0755'
+
+    - name: copy test token
+      copy:
+        src: token.html
+        dest: /srv/linux_tweet_app_token/token.html
 
     - name: run linux_tweet_app
       docker_container:
@@ -62,5 +67,5 @@
         - '80:80'
         mounts:
           - type: bind
-            source: /srv/linux_tweet_app/html
-            target: /usr/share/nginx/html
+            source: /srv/linux_tweet_app/token/token.html
+            target: /usr/share/nginx/html/.well-known/acme-challenge/token.html
