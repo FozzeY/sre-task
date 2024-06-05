@@ -8,7 +8,7 @@
 
     - name: skip if installed
       meta: end_play
-      when: 'docker-ce' in ansible_facts.packages
+      when: "'docker-ce' in ansible_facts.packages"
 
     - name: install ca-certificates curl
       apt:
