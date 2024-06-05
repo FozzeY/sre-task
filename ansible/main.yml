@@ -47,6 +47,12 @@
           path: /srv/linux_tweet_app
         source: build
 
+    - name: create html dir
+      file:
+        path: /srv/linux_tweet_app/html
+        state: directory
+        mode: '0755'
+
     - name: run linux_tweet_app
       docker_container:
         pull: never
@@ -54,3 +60,7 @@
         image: linux_tweet_app
         ports:
         - '80:80'
+        mounts:
+          - type: bind
+            source: /srv/linux_tweet_app/html
+            target: /usr/share/nginx/html
