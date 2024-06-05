@@ -104,7 +104,7 @@
 
     - name: create challenge dir
       file:
-        path: {{ item }}
+        path: '{{ item }}'
         state: directory
         mode: '0755'
       loop: /srv/linux_tweet_app/html/{{ cert_challenge | json_query('challenge_data[*].http-01.resource') | dirname }}
