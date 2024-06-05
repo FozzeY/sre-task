@@ -121,3 +121,9 @@
           - type: bind
             source: /srv/linux_tweet_app/html/
             target: /usr/share/nginx/html/
+
+    - name: let challenge be validated
+      account_key_src: /etc/pki/cert/private/account.key
+        csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
+        fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
+        data: "{{ cert_challenge }}"
