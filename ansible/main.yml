@@ -4,8 +4,8 @@
   tasks:
 
     - name: install ca-certificates curl
-      update_cache: yes
       apt:
+        update_cache: yes
         pkg:
         - ca-certificates
         - curl
