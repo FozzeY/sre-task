@@ -98,7 +98,7 @@
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
-    - name: create html dir
+    - name: create challenge dir
       file:
         path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource'] | dirname }}
         state: directory
