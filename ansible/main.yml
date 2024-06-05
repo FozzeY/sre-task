@@ -2,11 +2,9 @@
 - name: Install docker
   hosts: all
   tasks:
-    - name: apt update
-      apt:
-        update_cache: yes
 
     - name: install ca-certificates curl
+      update_cache: yes
       apt:
         pkg:
         - ca-certificates
