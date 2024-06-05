@@ -3,6 +3,10 @@
   hosts: all
   tasks:
 
+    - name: install jmespath
+      pip:
+        name: jmespath
+
     - name: get package facts
       package_facts:
 
