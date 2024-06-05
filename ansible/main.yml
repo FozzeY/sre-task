@@ -12,7 +12,7 @@
 
     - name: create keyring dir
       file:
-        path: /etc/apt/keyrings
+        path: /etc/apt/keyrings/
         state: directory
         mode: '0755'
 
@@ -60,6 +60,12 @@
         image: linux_tweet_app
         ports:
         - '80:80'
+
+    - name: create account key dir
+      file:
+        path: /etc/pki/cert/private/
+        state: directory
+        mode: '0600'
 
     - name: generate account key
       openssl_privatekey:
