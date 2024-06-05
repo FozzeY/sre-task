@@ -47,7 +47,7 @@
           name: linux_tweet_app
 
     - name: run linux_tweet_app
-      docker_cointainer:
+      docker_container:
         pull: never
         name: linux_tweet_app
         image: linux_tweet_app
