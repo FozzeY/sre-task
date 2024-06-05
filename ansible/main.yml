@@ -69,3 +69,11 @@
           - type: bind
             source: /srv/linux_tweet_app/token.html
             target: /usr/share/nginx/html/.well-known/acme-challenge/token.html
+
+    - name: create a cert challenge
+      acme_certificate:
+        account_key_src: /etc/pki/cert/private/account.key
+        account_email: igor.d.melnikov62@gmail.com
+        csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
+        fullchain_dest: /etc/ssl/${{ inventory_hostname }}.crt
+      register: cert_challenge
