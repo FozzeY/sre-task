@@ -100,7 +100,7 @@
 
     - name: create html dir
       file:
-        path: /srv/linux_tweet_app/html/
+        path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource'] | dirname }}
         state: directory
         mode: '0755'
 
