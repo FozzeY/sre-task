@@ -79,10 +79,6 @@
         - '{{ inventory_hostname }}'
         - www.{{ inventory_hostname }}
 
-    - name: print alt names
-      debug:
-        msg: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
-
     - name: create csr
       openssl_csr:
         path: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
@@ -117,13 +113,13 @@
         path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][item]['http-01]['resource'] | dirname }}
         state: directory
         mode: '0755'
-      loop: hostname
+      loop: '{{ hostname }}'
 
     - name: copy challenge
       copy:
         dest: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][item]['http-01']['resource'] }}
         content: "{{ cert_challenge['challenge_data'][item]['http-01']['resource_value'] }}"
-      loop: hostname
+      loop: '{{ hostname }}'
       when: cert_challenge is changed
 
     - name: run linux_tweet_app
@@ -146,4 +142,4 @@
         account_key_passphrase: '{{ acme_key_passphrase }}'
         csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
-        data: "{{ cert_challenge }}"
+        data: '{{ cert_challenge }}'
