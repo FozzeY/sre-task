@@ -114,16 +114,17 @@
 
     - name: create challenge dir
       file:
-        path: '{{ item }}'
+        path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][item]['http-01]['resource'] | dirname }}
         state: directory
         mode: '0755'
-      loop: /srv/linux_tweet_app/html/{{ cert_challenge | json_query('challenge_data[*].http-01.resource') | dirname }}
+      loop: hostname
 
     - name: copy challenge
       copy:
-        dest: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource'] }}
-        content: "{{ cert_challenge['challenge_data'][inventory_hostname]['http-01']['resource_value'] }}"
-      when: cert_challenge is changed and inventory_hostname in cert_challenge['challenge_data']
+        dest: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][item]['http-01']['resource'] }}
+        content: "{{ cert_challenge['challenge_data'][item]['http-01']['resource_value'] }}"
+      loop: hostname
+      when: cert_challenge is changed
 
     - name: run linux_tweet_app
       docker_container:
