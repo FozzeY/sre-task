@@ -65,7 +65,7 @@
       openssl_privatekey:
         path: /etc/pki/cert/private/account.key
         type: Ed25519
-        passphrase: {{ key_passphrase }}
+        passphrase: '{{ key_passphrase }}'
 
     - name: create a cert challenge
       acme_certificate:
