@@ -88,8 +88,7 @@
         path: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         privatekey_path: /etc/pki/cert/private/${{ inventory_hostname}}.pem
         privatekey_passphrase: '{{ csr_key_passphrase }}'
-        subject_alt_name: "{{ item | map('regex_replace', '^', 'DNS:') | list }}"
-      loop: '{{ hostname }}'
+        subject_alt_name: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
     - name: generate account key
       openssl_privatekey:
