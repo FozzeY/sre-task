@@ -63,7 +63,7 @@
 
     - name: create cert dirs
       file:
-        path: {{ item }}
+        path: '{{ item }}'
         state: directory
         mode: '0600'
       loop:
