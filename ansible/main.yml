@@ -42,9 +42,10 @@
 
     - name: build image
       docker_image:
+        name: linux_tweet_app
         build:
           path: /srv/linux_tweet_app
-          name: linux_tweet_app
+
 
     - name: run linux_tweet_app
       docker_container:
