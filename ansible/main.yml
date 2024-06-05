@@ -67,7 +67,7 @@
         path: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         privatekey_path: /etc/pki/cert/private/${{ inventory_hostname}}.pem
         privatekey_passphrase: '{{ csr_key_passphrase }}'
-        common_name: www.{{ inventory_hostname }}
+        subject_alt_name: 'DNS:{{ inventory_hostname }},DNS:www.{{ inventory_hostname }}'
 
     - name: generate account key
       openssl_privatekey:
@@ -86,10 +86,6 @@
         csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
-
-    - name: print challenge
-      debug:
-        var: cert_challenge
 
     - name: create html dir
       file:
