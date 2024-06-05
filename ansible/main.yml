@@ -3,6 +3,13 @@
   hosts: all
   tasks:
 
+    - name: get package facts
+      package_facts:
+
+    - name: skip if installed
+      meta: end_play
+      when: 'docker-ce' in ansible_facts.packages
+
     - name: install ca-certificates curl
       apt:
         update_cache: yes
@@ -34,6 +41,10 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
+
+- name: Deploy app
+  hosts: all
+  tasks:
 
     - name: checkout repo
       git:
