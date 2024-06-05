@@ -70,7 +70,6 @@
     - name: generate account key
       openssl_privatekey:
         path: /etc/pki/cert/private/account.key
-        type: Ed25519
         passphrase: '{{ key_passphrase }}'
         cipher: auto
 
