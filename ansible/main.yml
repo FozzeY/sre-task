@@ -53,11 +53,6 @@
         state: directory
         mode: '0755'
 
-    - name: copy test token
-      copy:
-        src: token.html
-        dest: /srv/linux_tweet_app/token.html
-
     - name: run linux_tweet_app
       docker_container:
         pull: never
@@ -65,10 +60,12 @@
         image: linux_tweet_app
         ports:
         - '80:80'
-        mounts:
-          - type: bind
-            source: /srv/linux_tweet_app/token.html
-            target: /usr/share/nginx/html/.well-known/acme-challenge/token.html
+
+    - name: generate account key
+      openssl_privatekey:
+        path: /etc/pki/cert/private/account.key
+        type: Ed25519
+        passphrase: {{ key_passphrase }}
 
     - name: create a cert challenge
       acme_certificate:
