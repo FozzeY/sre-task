@@ -61,16 +61,32 @@
         ports:
         - '80:80'
 
-    - name: create account key dir
+    - name: create cert dirs
       file:
-        path: /etc/pki/cert/private/
+        path: {{ item }}
         state: directory
         mode: '0600'
+      loop:
+        - /etc/pki/cert/private/
+        - /etc/pki/cert/csr/
+
+    - name: generate csr key
+      openssl_privatekey:
+        path: /etc/pki/cert/private/${{ inventory_hostname}}.pem
+        passphrase: '{{ csr_key_passphrase }}'
+        cipher: auto
+
+    - name: create csr
+      openssl_csr:
+        path: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
+        privatekey_path: /etc/pki/cert/private/${{ inventory_hostname}}.pem
+        privatekey_passphrase: '{{ csr_key_passphrase }}'
+        common_name: www.{{ inventory_hostname }}
 
     - name: generate account key
       openssl_privatekey:
         path: /etc/pki/cert/private/account.key
-        passphrase: '{{ key_passphrase }}'
+        passphrase: '{{ acme_key_passphrase }}'
         cipher: auto
 
     - name: create a cert challenge
