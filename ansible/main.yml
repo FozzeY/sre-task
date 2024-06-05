@@ -110,7 +110,7 @@
 
     - name: create challenge dir
       file:
-        path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][item]['http-01]['resource'] | dirname }}
+        path: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data'][item]['http-01']['resource'] | dirname }}
         state: directory
         mode: '0755'
       loop: '{{ hostname }}'
