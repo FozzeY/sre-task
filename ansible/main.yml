@@ -81,7 +81,7 @@
 
     - name: print alt names
       debug:
-        var: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
+        msg: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
     - name: create csr
       openssl_csr:
