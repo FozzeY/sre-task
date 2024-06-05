@@ -97,7 +97,7 @@
       copy:
         dest: /srv/linux_tweet_app/html/{{ cert_challenge['challenge_data']['{{ inventory_hostname }}']['http-01']['resource'] }}
         content: "{{ cert_challenge['challenge_data']['{{ inventory_hostname }}']['http-01']['resource_value'] }}"
-      when: sample_com_challenge is changed and '{{ inventory_hostname }}' in sample_com_challenge['challenge_data']
+      when: cert_challenge is changed and inventory_hostname in cert_challenge['challenge_data']
 
     - name: run linux_tweet_app
       docker_container:
