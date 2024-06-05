@@ -28,6 +28,7 @@ jobs:
           playbook: main.yml
           directory: ansible
           configuration: |
+            [defaults]
             ansible_python_interpreter = /usr/bin/python3
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
