@@ -100,7 +100,7 @@
         account_key_src: /srv/linux_tweet_app/csr/acme_account.key
         account_key_passphrase: '{{ acme_key_passphrase }}'
         account_email: igor.d.melnikov62@gmail.com
-        csr: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.csr
+        csr: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
@@ -137,7 +137,7 @@
         acme_version: 2
         account_key_src: /srv/linux_tweet_app/csr/acme_account.key
         account_key_passphrase: '{{ acme_key_passphrase }}'
-        csr: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.csr
+        csr: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
         data: '{{ cert_challenge }}'
 
