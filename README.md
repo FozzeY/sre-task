@@ -15,6 +15,6 @@ Runs Terraform code in the `terraform` directory to deploy a Vultr Ubuntu instan
 Runs Ansible code in the `ansible` directory to perform the following on `imelnikov.xyz` host:
 - Install Docker
 - Build the app image
-- Request ACME challenge
+- Request ACME challenge for `imelnikov.xyz` and `www.imelnikov.xyz`
 - Validate using HTTP-01
 - Install certificates
