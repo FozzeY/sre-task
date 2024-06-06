@@ -36,3 +36,7 @@ resource "vultr_instance" "this" {
   hostname    = var.hostname
   ssh_key_ids = [vultr_ssh_key.ansible.id]
 }
+
+output "instance_ip" {
+  value = vultr_instance.this.ip
+}
