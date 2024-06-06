@@ -154,4 +154,4 @@
         mounts:
           - type: bind
             source: /srv/linux_tweet_app/nginx.conf
-            target: /etc/nginx/conf.d/default.conf
+            target: /etc/nginx/nginx.conf
