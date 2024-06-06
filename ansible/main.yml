@@ -70,7 +70,6 @@
     - name: generate cert key
       openssl_privatekey:
         path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
-        cipher: auto
 
     - name: list of dns names
       set_fact:
