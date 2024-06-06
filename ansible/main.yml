@@ -3,37 +3,37 @@
   hosts: all
   tasks:
 
-    - name: get package facts
+    - name: Get package facts
       package_facts:
 
-    - name: skip if installed
+    - name: Skip if docker installed
       meta: end_play
       when: "'docker-ce' in ansible_facts.packages"
 
-    - name: install ca-certificates curl
+    - name: Install ca-certificates curl
       apt:
         update_cache: yes
         pkg:
         - ca-certificates
         - curl
 
-    - name: create keyring dir
+    - name: Create keyring dir
       file:
         path: /etc/apt/keyrings/
         state: directory
         mode: '0755'
 
-    - name: download key
+    - name: Download key
       get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
         dest: /etc/apt/keyrings/docker.asc
         mode: a+r
 
-    - name: add docker repository
+    - name: Add repo
       apt_repository:
         repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
 
-    - name: install docker
+    - name: Install packages
       apt:
         pkg:
           - docker-ce
@@ -42,23 +42,23 @@
           - docker-buildx-plugin
           - docker-compose-plugin
 
-- name: Deploy app
+- name: Deploy linux_tweet_app
   hosts: all
   tasks:
 
-    - name: checkout repo
+    - name: Checkout repo
       git:
         repo: https://github.com/dockersamples/linux_tweet_app
         dest: /srv/linux_tweet_app
 
-    - name: build image
+    - name: Build image
       docker_image:
         name: linux_tweet_app
         build:
           path: /srv/linux_tweet_app
         source: build
 
-    - name: create cert dirs
+    - name: Create cert dirs
       file:
         path: /srv/linux_tweet_app/{{ item }}/
         state: directory
@@ -67,29 +67,29 @@
         - csr
         - ssl
 
-    - name: generate cert key
+    - name: Generate private cert key
       openssl_privatekey:
         path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
 
-    - name: list of dns names
+    - name: Create list of dns names
       set_fact:
         hostname:
         - '{{ inventory_hostname }}'
         - www.{{ inventory_hostname }}
 
-    - name: create csr
+    - name: Create certificate signing request
       openssl_csr:
         path: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
         privatekey_path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
         subject_alt_name: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
-    - name: generate acme account key
+    - name: Generate acme account key
       openssl_privatekey:
         path: /srv/linux_tweet_app/csr/acme_account.key
         passphrase: '{{ acme_key_passphrase }}'
         cipher: auto
 
-    - name: create a cert challenge
+    - name: Create cert challenge
       acme_certificate:
         acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
         terms_agreed: true
@@ -101,7 +101,7 @@
         fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
-    - name: create challenge dirs
+    - name: Create challenge dirs
       file:
         path: /srv/linux_tweet_app/html/{{ item.value['http-01']['resource'] | dirname }}
         state: directory
@@ -109,14 +109,14 @@
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
       when: cert_challenge is changed
 
-    - name: copy challenges
+    - name: Copy challenges
       copy:
         dest: /srv/linux_tweet_app/html/{{ item.value['http-01']['resource'] }}
         content: "{{ item.value['http-01']['resource_value'] }}"
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
       when: cert_challenge is changed
 
-    - name: run linux_tweet_app
+    - name: Run linux_tweet_app with challenges
       docker_container:
         pull: never
         name: linux_tweet_app
@@ -127,8 +127,9 @@
           - type: bind
             source: /srv/linux_tweet_app/html/
             target: /usr/share/nginx/html/
+      when: cert_challenge is changed
 
-    - name: let challenge be validated
+    - name: Let challenge be validated
       acme_certificate:
         acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
         acme_version: 2
@@ -137,13 +138,14 @@
         csr: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
         data: '{{ cert_challenge }}'
+      when: cert_challenge is changed
 
-    - name: copy nginx conf
+    - name: Copy nginx.conf
       copy:
         src: nginx.conf
         dest: /srv/linux_tweet_app/nginx.conf
 
-    - name: mount nginx conf
+    - name: Run linux_tweet_app
       docker_container:
         pull: never
         name: linux_tweet_app
