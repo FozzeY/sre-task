@@ -137,3 +137,20 @@
         csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
         fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
         data: '{{ cert_challenge }}'
+
+    - name: copy nginx conf
+      copy:
+        src: nginx.conf
+        dest: /srv/linux/tweet_app/nginx.conf
+
+    - name: mount nginx conf
+      docker_container:
+        pull: never
+        name: linux_tweet_app
+        image: linux_tweet_app
+        ports:
+        - '80:80'
+        - '443:443'
+        mounts:
+            source: /srv/linux_tweet_app/nginx.conf
+            target: /etc/nginx/conf.d/default.conf
