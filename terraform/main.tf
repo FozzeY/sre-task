@@ -38,5 +38,5 @@ resource "vultr_instance" "this" {
 }
 
 output "instance_ip" {
-  value = vultr_instance.this.ip
+  value = vultr_instance.this.main_ip
 }
