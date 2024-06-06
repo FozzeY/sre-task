@@ -69,7 +69,7 @@
 
     - name: generate cert key
       openssl_privatekey:
-        path: /srv/linux_tweet_app/ssl/${{ inventory_hostname}}.key
+        path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
         passphrase: '{{ csr_key_passphrase }}'
         cipher: auto
 
@@ -82,7 +82,7 @@
     - name: create csr
       openssl_csr:
         path: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
-        privatekey_path: /srv/linux_tweet_app/ssl/${{ inventory_hostname}}.key
+        privatekey_path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
         privatekey_passphrase: '{{ csr_key_passphrase }}'
         subject_alt_name: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
