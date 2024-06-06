@@ -21,11 +21,6 @@ resource "vultr_ssh_key" "ansible" {
   ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWRMiE+JFu2WAP2uOeaOoy11kdBz/7NWCdYow2mS5qA ansible@${var.hostname}"
 }
 
-resource "vultr_ssh_key" "personal" {
-  name    = "Personal"
-  ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLD2+l31NjbuG9rQ92W44318lyttnhZj6wlV5f26USM tehfozzey@gmail.com"
-}
-
 data "vultr_os" "ubuntu_2404" {
   filter {
     name   = "name"
