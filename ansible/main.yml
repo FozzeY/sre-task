@@ -141,7 +141,7 @@
     - name: copy nginx conf
       copy:
         src: nginx.conf
-        dest: /srv/linux/tweet_app/nginx.conf
+        dest: /srv/linux_tweet_app/nginx.conf
 
     - name: mount nginx conf
       docker_container:
