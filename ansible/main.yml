@@ -140,9 +140,9 @@
         data: '{{ cert_challenge }}'
       when: cert_challenge is changed
 
-    - name: Copy nginx.conf
+    - name: Create nginx.conf
       copy:
-        src: nginx.conf
+        src: nginx.conf.j2
         dest: /srv/linux_tweet_app/nginx.conf
 
     - name: Run linux_tweet_app

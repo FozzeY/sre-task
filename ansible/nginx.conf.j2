@@ -49,8 +49,8 @@ http {
 	    listen 443 ssl;
 
         server_name fozzey.ru;
-        ssl_certificate /etc/ssl/imelnikov.xyz.crt;
-        ssl_certificate_key /etc/ssl/imelnikov.xyz.key;
+        ssl_certificate /etc/ssl/{{ inventory_hostname }}.crt;
+        ssl_certificate_key /etc/ssl/{{ inventory_hostname }}.key;
         location / {
 		    root /usr/share/nginx/html;
 	    }
