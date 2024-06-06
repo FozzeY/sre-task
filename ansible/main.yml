@@ -58,15 +58,18 @@
           path: /srv/linux_tweet_app
         source: build
 
-    - name: create csr dir
+    - name: create cert dirs
       file:
-        path: /etc/pki/cert/csr/
+        path: /srv/linux_tweet_app/{{ item }}/
         state: directory
         mode: '0600'
+      loop:
+        - csr
+        - ssl
 
     - name: generate cert key
       openssl_privatekey:
-        path: /etc/ssl/private/${{ inventory_hostname}}.key
+        path: /srv/linux_tweet_app/ssl/${{ inventory_hostname}}.key
         passphrase: '{{ csr_key_passphrase }}'
         cipher: auto
 
@@ -78,14 +81,14 @@
 
     - name: create csr
       openssl_csr:
-        path: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
-        privatekey_path: /etc/ssl/private/${{ inventory_hostname}}.key
+        path: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
+        privatekey_path: /srv/linux_tweet_app/ssl/${{ inventory_hostname}}.key
         privatekey_passphrase: '{{ csr_key_passphrase }}'
         subject_alt_name: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
-    - name: generate account key
+    - name: generate acme account key
       openssl_privatekey:
-        path: /etc/ssl/private/account.key
+        path: /srv/linux_tweet_app/csr/acme_account.key
         passphrase: '{{ acme_key_passphrase }}'
         cipher: auto
 
@@ -94,11 +97,11 @@
         acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
         terms_agreed: true
         acme_version: 2
-        account_key_src: /etc/ssl/private/account.key
+        account_key_src: /srv/linux_tweet_app/csr/acme_account.key
         account_key_passphrase: '{{ acme_key_passphrase }}'
         account_email: igor.d.melnikov62@gmail.com
-        csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
-        fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
+        csr: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.csr
+        fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
     - name: create challenge dirs
@@ -132,10 +135,10 @@
       acme_certificate:
         acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
         acme_version: 2
-        account_key_src: /etc/ssl/private/account.key
+        account_key_src: /srv/linux_tweet_app/csr/acme_account.key
         account_key_passphrase: '{{ acme_key_passphrase }}'
-        csr: /etc/pki/cert/csr/{{ inventory_hostname }}.csr
-        fullchain_dest: /etc/ssl/{{ inventory_hostname }}.crt
+        csr: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.csr
+        fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
         data: '{{ cert_challenge }}'
 
     - name: copy nginx conf
@@ -155,3 +158,6 @@
           - type: bind
             source: /srv/linux_tweet_app/nginx.conf
             target: /etc/nginx/nginx.conf
+          - type: bind
+            source: /srv/linux_tweet_app/ssl/
+            target: /etc/ssl/
