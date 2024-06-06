@@ -11,9 +11,7 @@ on:
     paths:
       - ansible/**
       - .github/workflows/ansible.yml
-  workflow_run:
-    workflows: ['Terraform']
-    types: [completed]
+  workflow_dispatch:
 
 jobs:
   ansible:
