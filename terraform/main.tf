@@ -34,5 +34,5 @@ resource "vultr_instance" "this" {
   os_id       = data.vultr_os.ubuntu_2404.id
   label       = var.hostname
   hostname    = var.hostname
-  ssh_key_ids = [vultr_ssh_key.ansible.id, vultr_ssh_key.personal.id]
+  ssh_key_ids = [vultr_ssh_key.ansible.id]
 }
