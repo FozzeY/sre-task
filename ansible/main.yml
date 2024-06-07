@@ -137,7 +137,7 @@
       when: cert_challenge is changed
 
     - name: Create nginx.conf
-      copy:
+      template:
         src: nginx.conf.j2
         dest: /srv/nginx/nginx.conf
 
