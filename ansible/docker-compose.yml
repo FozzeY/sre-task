@@ -6,6 +6,3 @@ services:
     volumes:
       - '/srv/nginx/ssl:/etc/ssl'
       - '/srv/nginx/nginx.conf:/etc/nginx/nginx.conf'
-    ports:
-      - '80:80'
-      - '443:443'
