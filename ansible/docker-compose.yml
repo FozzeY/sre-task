@@ -4,5 +4,6 @@ services:
   proxy:
     image: 'nginx:latest'
     volumes:
-      - '/srv/nginx/ssl:/etc/nginx/ssl'
+      - '/srv/nginx/ssl:/etc/ssl'
       - '/srv/nginx/nginx.conf:/etc/nginx/nginx.conf'
+
