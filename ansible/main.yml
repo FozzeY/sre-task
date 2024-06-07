@@ -58,18 +58,15 @@
           path: /srv/linux_tweet_app
         source: build
 
-    - name: Create cert dirs
+    - name: Create reverse proxy dir
       file:
-        path: /srv/linux_tweet_app/{{ item }}/
+        path: /srv/nginx/ssl
         state: directory
         mode: '0600'
-      loop:
-        - csr
-        - ssl
 
     - name: Generate private cert key
       openssl_privatekey:
-        path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
+        path: /srv/nginx/ssl/{{ inventory_hostname }}.key
 
     - name: Create list of dns names
       set_fact:
@@ -79,13 +76,13 @@
 
     - name: Create certificate signing request
       openssl_csr:
-        path: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
-        privatekey_path: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.key
+        path: /srv/nginx/{{ inventory_hostname }}.csr
+        privatekey_path: /srv/nginx/ssl/{{ inventory_hostname }}.key
         subject_alt_name: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
     - name: Generate acme account key
       openssl_privatekey:
-        path: /srv/linux_tweet_app/csr/acme_account.key
+        path: /srv/nginx/acme_account.key
         passphrase: '{{ acme_key_passphrase }}'
         cipher: auto
 
@@ -94,16 +91,16 @@
         acme_directory: https://acme-v02.api.letsencrypt.org/directory
         terms_agreed: true
         acme_version: 2
-        account_key_src: /srv/linux_tweet_app/csr/acme_account.key
+        account_key_src: /srv/nginx/acme_account.key
         account_key_passphrase: '{{ acme_key_passphrase }}'
         account_email: igor.d.melnikov62@gmail.com
-        csr: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
-        fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
+        csr: /srv/nginx/{{ inventory_hostname }}.csr
+        fullchain_dest: /srv/nginx/ssl/{{ inventory_hostname }}.crt
       register: cert_challenge
 
     - name: Create challenge dirs
       file:
-        path: /srv/linux_tweet_app/html/{{ item.value['http-01']['resource'] | dirname }}
+        path: /srv/nginx/html/{{ item.value['http-01']['resource'] | dirname }}
         state: directory
         mode: '0755'
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
@@ -111,21 +108,20 @@
 
     - name: Copy challenges
       copy:
-        dest: /srv/linux_tweet_app/html/{{ item.value['http-01']['resource'] }}
+        dest: /srv/nginx/html/{{ item.value['http-01']['resource'] }}
         content: "{{ item.value['http-01']['resource_value'] }}"
       loop: '{{ cert_challenge.challenge_data | dict2items }}'
       when: cert_challenge is changed
 
-    - name: Run linux_tweet_app with challenges
+    - name: Run nginx with challenges
       docker_container:
-        pull: never
-        name: linux_tweet_app
-        image: linux_tweet_app
+        name: reverse-proxy
+        image: nginx:latest
         ports:
         - '80:80'
         mounts:
           - type: bind
-            source: /srv/linux_tweet_app/html/
+            source: /srv/nginx/html/
             target: /usr/share/nginx/html/
       when: cert_challenge is changed
 
@@ -133,30 +129,29 @@
       acme_certificate:
         acme_directory: https://acme-v02.api.letsencrypt.org/directory
         acme_version: 2
-        account_key_src: /srv/linux_tweet_app/csr/acme_account.key
+        account_key_src: /srv/nginx/acme_account.key
         account_key_passphrase: '{{ acme_key_passphrase }}'
-        csr: /srv/linux_tweet_app/csr/{{ inventory_hostname }}.csr
-        fullchain_dest: /srv/linux_tweet_app/ssl/{{ inventory_hostname }}.crt
+        csr: /srv/nginx/{{ inventory_hostname }}.csr
+        fullchain_dest: /srv/nginx/ssl/{{ inventory_hostname }}.crt
         data: '{{ cert_challenge }}'
       when: cert_challenge is changed
 
     - name: Create nginx.conf
       copy:
         src: nginx.conf.j2
-        dest: /srv/linux_tweet_app/nginx.conf
+        dest: /srv/nginx/nginx.conf
 
-    - name: Run linux_tweet_app
+    - name: Run nginx
       docker_container:
-        pull: never
-        name: linux_tweet_app
-        image: linux_tweet_app
+        name: reverse-proxy
+        image: nginx:latest
         ports:
         - '80:80'
         - '443:443'
         mounts:
           - type: bind
-            source: /srv/linux_tweet_app/nginx.conf
+            source: /srv/nginx/nginx.conf
             target: /etc/nginx/nginx.conf
           - type: bind
-            source: /srv/linux_tweet_app/ssl/
+            source: /srv/nginx/ssl/
             target: /etc/ssl/
