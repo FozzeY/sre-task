@@ -46,11 +46,6 @@
   hosts: all
   tasks:
 
-    - name: Checkout repo
-      git:
-        repo: https://github.com/dockersamples/linux_tweet_app
-        dest: /srv/linux_tweet_app
-
     - name: Build image
       docker_image:
         name: linux_tweet_app
@@ -140,6 +135,25 @@
       template:
         src: nginx.conf.j2
         dest: /srv/nginx/nginx.conf
+
+    - name: Checkout repo
+      git:
+        repo: https://github.com/dockersamples/linux_tweet_app
+        dest: /srv/linux_tweet_app
+
+    - name: copy docker-compose
+      copy:
+        src: docker-compose.yml
+        dest: /srv/linux_tweet_app/docker-compose.yml
+
+    - name: start docker-compose
+      docker_compose_v2:
+        project_src: /srv/linux_tweet_app
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
 
     - name: Run nginx
       docker_container:
