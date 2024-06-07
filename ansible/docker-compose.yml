@@ -1,6 +1,8 @@
 services:
   app:
     build: .
+    networks:
+      - backend
   proxy:
     image: 'nginx:latest'
     volumes:
@@ -9,3 +11,11 @@ services:
     ports:
       - '0.0.0.0:80:80'
       - '0.0.0.0:443:443'
+    networks:
+      - frontend
+      - backend
+networks:
+  frontend:
+    driver: host
+  backend:
+    driver: bridge
