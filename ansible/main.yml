@@ -160,7 +160,7 @@
     - name: Assert that services are running
       assert:
         that:
-          - 'output.containers[0].Name.linux_tweet_app-app-1'
+          - "output.containers[0]['Name']['linux_tweet_app-app-1']"
           - 'output.containers[0].State.running'
           - 'output.containers[1].Name.linux_tweet_app-proxy-1'
           - 'output.containers[1].State.running'
