@@ -154,12 +154,8 @@
     - name: restart docker-compose
       community.docker.docker_compose_v2:
         project_src: /srv/linux_tweet_app
-        state: restarted
+        recreate: always
       register: output
-
-    - name: Debug output
-      debug:
-        var: output['containers'][0]['Name']
 
     - name: Assert that services are running
       assert:
