@@ -159,18 +159,3 @@
     - name: Show results
       ansible.builtin.debug:
         var: output
-
-    - name: Run nginx
-      docker_container:
-        name: reverse-proxy
-        image: nginx:latest
-        ports:
-        - '80:80'
-        - '443:443'
-        mounts:
-          - type: bind
-            source: /srv/nginx/nginx.conf
-            target: /etc/nginx/nginx.conf
-          - type: bind
-            source: /srv/nginx/ssl/
-            target: /etc/ssl/
