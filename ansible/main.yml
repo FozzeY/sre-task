@@ -110,7 +110,7 @@
 
     - name: Run nginx with challenges
       docker_container:
-        name: reverse-proxy
+        name: challenge-proxy
         image: nginx:latest
         ports:
         - '80:80'
@@ -130,6 +130,11 @@
         fullchain_dest: /srv/nginx/ssl/{{ inventory_hostname }}.crt
         data: '{{ cert_challenge }}'
       when: cert_challenge is changed
+
+    - name: remove nginx with challenges
+      docker_container:
+        name: challenge-proxy
+        state: absent
 
     - name: Create nginx.conf
       template:
