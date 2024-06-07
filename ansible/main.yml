@@ -159,7 +159,7 @@
 
     - name: Debug output
       debug:
-        msg: output.containers[0]['Name']
+        msg: output['containers'][0]['Name']
 
     - name: Assert that services are running
       assert:
