@@ -12,7 +12,7 @@ http {
         ssl_certificate /etc/ssl/{{ inventory_hostname }}.crt;
         ssl_certificate_key /etc/ssl/{{ inventory_hostname }}.key;
         location / {
-            proxy_pass app;
+            proxy_pass http://app;
         }
     }
 }
