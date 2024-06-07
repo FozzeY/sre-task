@@ -147,7 +147,7 @@
         dest: /srv/linux_tweet_app/docker-compose.yml
 
     - name: start docker-compose
-      docker_compose_v2:
+      community.docker.docker_compose_v2:
         project_src: /srv/linux_tweet_app
       register: output
 
