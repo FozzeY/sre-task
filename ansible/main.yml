@@ -46,13 +46,6 @@
   hosts: all
   tasks:
 
-    - name: Build image
-      docker_image:
-        name: linux_tweet_app
-        build:
-          path: /srv/linux_tweet_app
-        source: build
-
     - name: Create reverse proxy dir
       file:
         path: /srv/nginx/ssl
