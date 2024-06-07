@@ -160,5 +160,5 @@
     - name: Assert that services are running
       assert:
         that:
-          - "output.containers.app.linux_tweet_app-app-1.state.running"
-          - "output.containers.db.linux_tweet_app-proxy-1.state.running"
+          - "output.services.app.linux_tweet_app-app-1.state.running"
+          - "output.services.proxy.linux_tweet_app-proxy-1.state.running"
