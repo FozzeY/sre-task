@@ -1,21 +1,11 @@
 services:
   app:
     build: .
-    networks:
-      - backend
   proxy:
     image: 'nginx:latest'
     volumes:
       - '/srv/nginx/ssl:/etc/ssl'
       - '/srv/nginx/nginx.conf:/etc/nginx/nginx.conf'
     ports:
-      - '0.0.0.0:80:80'
-      - '0.0.0.0:443:443'
-    networks:
-      - frontend
-      - backend
-networks:
-  frontend:
-    driver: host
-  backend:
-    driver: bridge
+      - '80:80'
+      - '443:443'
