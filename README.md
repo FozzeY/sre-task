@@ -1,4 +1,6 @@
 # NGINX Reverse Proxy with SSL
+![Terraform workflow](https://github.com/FozzeY/sre-task/actions/workflows/terraform.yml/badge.svg)
+![Ansible workflow](https://github.com/FozzeY/sre-task/actions/workflows/ansible.yml/badge.svg)
 
 Automated installation of a simple nginx web app https://github.com/dockersamples/linux_tweet_app with automatic Let's Encrypt certificate generation.
 
