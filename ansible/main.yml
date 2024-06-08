@@ -139,7 +139,7 @@
         repo: https://github.com/dockersamples/linux_tweet_app
         dest: /srv/linux_tweet_app
 
-    - name: copy docker-compose
+    - name: Copy docker-compose
       copy:
         src: docker-compose.yml
         dest: /srv/linux_tweet_app/docker-compose.yml
@@ -147,7 +147,6 @@
     - name: restart docker-compose
       community.docker.docker_compose_v2:
         project_src: /srv/linux_tweet_app
-        recreate: always
       register: output
 
     - name: Assert that services are running
