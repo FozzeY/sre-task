@@ -2,26 +2,29 @@
 ![Terraform workflow](https://github.com/FozzeY/sre-task/actions/workflows/terraform.yml/badge.svg)
 ![Ansible workflow](https://github.com/FozzeY/sre-task/actions/workflows/ansible.yml/badge.svg)
 
-Automated installation of a simple nginx web app https://github.com/dockersamples/linux_tweet_app with automatic Let's Encrypt certificate generation.
+Automated installation of a simple nginx web app https://github.com/dockersamples/linux_tweet_app with nginx reverse proxy and automatic Let's Encrypt certificate generation.
+
+Hosted at https://imelnikov.xyz/.
 
 The installation is split into two Github Actions workflows:
 
 ## Terraform
 
-Runs Terraform code in the `terraform` directory to deploy a Vultr Ubuntu instance.
+Runs Terraform code in the `terraform` directory to deploy a Vultr Ubuntu instance with a predefined SSH key.
 
 ## Ansible
 
-Runs Ansible code in the `ansible` directory to perform the following on `imelnikov.xyz` host:
+Runs Ansible code in the `ansible` directory to perform the following on `HOSTNAME` host:
 - Install Docker
-- Build the app image
-- Request ACME challenge for `imelnikov.xyz` and `www.imelnikov.xyz`
-- Validate using HTTP-01
-- Install certificates
+- Request ACME challenge for `HOSTNAME` and `www.HOSTNAME`
+- Validate using HTTP-01 on nginx proxy
+- Install certificates to nginx proxy
+- Configure proxy to route requests to the app
+- Run docker-compose file which builds the app and starts it with the proxy
 
 ### Variables and secrets
 
-`HOSTNAME` - DNS name for the instance. Used by Terraform for instance name and by Ansible for host inventory name and DNS name for certificate.
+`HOSTNAME` - DNS name for the instance. Used by Terraform for instance name and by Ansible for host inventory name and DNS name for certificate. Set to `imelnikov.xyz`.
 
 `TF_API_TOKEN` - Terraform Cloud token. TFC is used as a backend.
 
