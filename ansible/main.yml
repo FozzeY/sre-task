@@ -149,11 +149,9 @@
       community.docker.docker_compose_v2:
         project_src: /srv/linux_tweet_app
         recreate: always
+        wait: true
+        wait_timeout: 2
       register: output
-
-    - name: Wait 1 sec
-      wait_for:
-        timeout: 1
 
     - name: Assert that services are running
       assert:
