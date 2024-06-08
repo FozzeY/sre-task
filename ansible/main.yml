@@ -6,7 +6,7 @@
     - name: Get package facts
       package_facts:
 
-    - name: Skip if docker installed
+    - name: Skip if docker is installed
       meta: end_play
       when: "'docker-ce' in ansible_facts.packages"
 
@@ -42,7 +42,7 @@
           - docker-buildx-plugin
           - docker-compose-plugin
 
-- name: Provision certificates
+- name: Provision certs and deploy the app
   hosts: all
   tasks:
 
@@ -56,7 +56,7 @@
       openssl_privatekey:
         path: /srv/nginx/ssl/{{ inventory_hostname }}.key
 
-    - name: Create list of dns names
+    - name: Create list of DNS names
       set_fact:
         hostname:
         - '{{ inventory_hostname }}'
@@ -68,7 +68,7 @@
         privatekey_path: /srv/nginx/ssl/{{ inventory_hostname }}.key
         subject_alt_name: "{{ hostname | map('regex_replace', '^', 'DNS:') | list }}"
 
-    - name: Generate acme account key
+    - name: Generate ACME account key
       openssl_privatekey:
         path: /srv/nginx/acme_account.key
         passphrase: '{{ acme_key_passphrase }}'
@@ -130,14 +130,10 @@
         state: absent
       when: cert_challenge is changed
 
-    - name: Create nginx.conf
+    - name: Copy nginx.conf
       template:
         src: nginx.conf.j2
         dest: /srv/nginx/nginx.conf
-
-- name: Deploy linux_tweet_app
-  hosts: all
-  tasks:
 
     - name: Checkout repo
       git:
