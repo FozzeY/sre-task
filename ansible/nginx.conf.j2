@@ -40,19 +40,19 @@ http {
     server_tokens off;
 
     server {
-	    listen 80 default_server;
-		server_name _;
-		return 301 https://$host$request_uri;
-	}
+        listen 80 default_server;
+        server_name _;
+        return 301 https://$host$request_uri;
+    }
 
     server {
-	    listen 443 ssl;
+        listen 443 ssl;
 
         server_name {{ inventory_hostname }};
         ssl_certificate /etc/ssl/{{ inventory_hostname }}.crt;
         ssl_certificate_key /etc/ssl/{{ inventory_hostname }}.key;
         location / {
-		    proxy_pass http://app;
-	    }
+            proxy_pass http://app;
+        }
     }
 }
