@@ -1,12 +1,12 @@
 ---
-- name: Install Docker
+- name: Install Docker Engine
   hosts: all
   tasks:
 
     - name: Get package facts
       package_facts:
 
-    - name: Skip if Docker is installed
+    - name: Skip if Docker Engine is installed
       meta: end_play
       when: "'docker-ce' in ansible_facts.packages"
 
