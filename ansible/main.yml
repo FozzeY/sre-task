@@ -42,7 +42,7 @@
           - docker-buildx-plugin
           - docker-compose-plugin
 
-- name: Deploy linux_tweet_app
+- name: Provision certificates
   hosts: all
   tasks:
 
@@ -124,15 +124,20 @@
         data: '{{ cert_challenge }}'
       when: cert_challenge is changed
 
-    - name: remove nginx with challenges
+    - name: Remove nginx with challenges
       docker_container:
         name: challenge-proxy
         state: absent
+      when: cert_challenge is changed
 
     - name: Create nginx.conf
       template:
         src: nginx.conf.j2
         dest: /srv/nginx/nginx.conf
+
+- name: Deploy linux_tweet_app
+  hosts: all
+  tasks:
 
     - name: Checkout repo
       git:
@@ -144,7 +149,7 @@
         src: docker-compose.yml
         dest: /srv/linux_tweet_app/docker-compose.yml
 
-    - name: restart docker-compose
+    - name: Start docker-compose
       community.docker.docker_compose_v2:
         project_src: /srv/linux_tweet_app
       register: output
