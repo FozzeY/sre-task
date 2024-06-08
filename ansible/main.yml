@@ -151,6 +151,10 @@
         recreate: always
       register: output
 
+    - name: Wait 1 sec
+      wait_for:
+        timeout: 1
+
     - name: Assert that services are running
       assert:
         that:
