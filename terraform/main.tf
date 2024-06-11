@@ -29,9 +29,9 @@ data "vultr_os" "ubuntu_2404" {
 }
 
 resource "vultr_reserved_ip" "this" {
-    label   = var.hostname
-    region  = "waw"
-    ip_type = "v4"
+  label   = var.hostname
+  region  = "waw"
+  ip_type = "v4"
 }
 
 resource "vultr_instance" "this" {
