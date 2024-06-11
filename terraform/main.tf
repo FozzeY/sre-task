@@ -28,13 +28,20 @@ data "vultr_os" "ubuntu_2404" {
   }
 }
 
+resource "vultr_reserved_ip" "this" {
+    label   = var.hostname
+    region  = "waw"
+    ip_type = "v4"
+}
+
 resource "vultr_instance" "this" {
-  region      = "waw"
-  plan        = "vhp-1c-1gb-amd"
-  os_id       = data.vultr_os.ubuntu_2404.id
-  label       = var.hostname
-  hostname    = var.hostname
-  ssh_key_ids = [vultr_ssh_key.ansible.id]
+  region         = "waw"
+  plan           = "vhp-1c-1gb-amd"
+  os_id          = data.vultr_os.ubuntu_2404.id
+  label          = var.hostname
+  hostname       = var.hostname
+  ssh_key_ids    = [vultr_ssh_key.ansible.id]
+  reserved_ip_id = vultr_reserved_ip.this.id
 }
 
 output "instance_ip" {
