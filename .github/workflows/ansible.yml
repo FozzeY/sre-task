@@ -29,6 +29,9 @@ jobs:
           playbook: main.yml
           directory: ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          configuration: |
+            [defaults]
+            interpreter_python = auto_silent
           inventory: |
             [all]
             ${{ vars.HOSTNAME }}
