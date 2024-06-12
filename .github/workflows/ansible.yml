@@ -38,3 +38,4 @@ jobs:
           options: |
             --user root
             -e acme_key_passphrase=${{ secrets.ACME_KEY_PASSPHRASE }}
+            -vvv
